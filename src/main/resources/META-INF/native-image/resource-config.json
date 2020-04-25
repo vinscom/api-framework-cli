@@ -1,0 +1,6 @@
+{
+  "resources":[
+    {"pattern":"META-INF/services/javax.xml.stream.XMLInputFactory"}, 
+    {"pattern":"META-INF/services/javax.xml.stream.XMLOutputFactory"}
+  ]
+}

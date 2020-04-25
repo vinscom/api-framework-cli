@@ -1,0 +1,6 @@
+nb-configuration.xml
+nbactions.xml
+nbproject
+target
+test
+.DS_Store
