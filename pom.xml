@@ -17,37 +17,14 @@
             <version>4.2.0</version>
         </dependency>
         <dependency>
-            <groupId>io.reactivex.rxjava3</groupId>
-            <artifactId>rxjava</artifactId>
-            <version>3.0.2</version>
-        </dependency>
-        <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
             <version>2.3.30</version>
         </dependency>
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.5.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
-            <version>5.5.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.5.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
-            <version>2.10.3</version>
+            <version>2.11.0</version>
         </dependency>
     </dependencies>
     <build>
@@ -82,11 +59,12 @@
                 <configuration>
                     <executable>java</executable>
                     <arguments>
-                        <argument>-agentlib:native-image-agent=config-output-dir=${project.basedir}/src/main/resources/META-INF/native-image</argument>
+                        <argument>-agentlib:native-image-agent=config-output-dir=${project.basedir}/src/main/resources/META-INF/native-image/in/erail/cli/af</argument>
                         <argument>-classpath</argument>
                         <classpath/>
                         <argument>in.erail.cli.af.APIFrameworkCLI</argument>
                         <argument>create</argument>
+                        <argument>-o test</argument>
                     </arguments>
                 </configuration>
             </plugin>

@@ -4,3 +4,7 @@ nbproject
 target
 test
 .DS_Store
+.settings
+.project
+.classpath
+ test

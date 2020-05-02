@@ -1,0 +1,9 @@
+{
+  "resources":[
+    {"pattern":"\\Qconfig/pom.json\\E"}, 
+    {"pattern":"\\Qfreemarker/ext/beans/DefaultMemberAccessPolicy-rules\\E"}, 
+    {"pattern":"\\Qfreemarker/version.properties\\E"}, 
+    {"pattern":"\\Qtemplate/pom.tpl\\E"}
+  ],
+  "bundles":[]
+}
