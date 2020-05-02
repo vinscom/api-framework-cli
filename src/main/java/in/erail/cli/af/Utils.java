@@ -7,6 +7,7 @@ import freemarker.template.MalformedTemplateNameException;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 
 /**
@@ -33,6 +34,8 @@ public class Utils {
   }
 
   public static String getResource(String pPath) throws URISyntaxException, IOException {
-    return new String(Utils.class.getResourceAsStream(pPath).readAllBytes());
+    try (InputStream stream = Utils.class.getResourceAsStream(pPath)) {
+      return new String(stream.readAllBytes());
+    }
   }
 }
