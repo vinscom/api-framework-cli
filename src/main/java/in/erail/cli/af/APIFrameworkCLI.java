@@ -20,8 +20,7 @@ public class APIFrameworkCLI implements Callable<Integer> {
   }
 
   @Override
-  public Integer call() throws Exception { // your business logic goes here...
-    System.out.printf("Hello");
+  public Integer call() throws Exception {
     return 0;
   }
 }
