@@ -8,8 +8,6 @@ import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 /**
  *
@@ -35,6 +33,6 @@ public class Utils {
   }
 
   public static String getResource(String pPath) throws URISyntaxException, IOException {
-    return new String(Files.readAllBytes(Paths.get(Utils.class.getResource(pPath).toURI())));
+    return new String(Utils.class.getResourceAsStream(pPath).readAllBytes());
   }
 }
