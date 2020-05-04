@@ -22,6 +22,8 @@ public class Project {
 
   private boolean enableLambda;
 
+  private String[] environments;
+
   public String getGroupId() {
     return groupId;
   }
@@ -145,7 +147,16 @@ public class Project {
 
   public Project setEnableLambda(boolean pEnableLambda) {
     this.enableLambda = pEnableLambda;
-    return  this;
+    return this;
+  }
+
+  public String[] getEnvironments() {
+    return environments;
+  }
+
+  public Project setEnvironments(String[] pEnvironments) {
+    this.environments = pEnvironments;
+    return this;
   }
 
 }
