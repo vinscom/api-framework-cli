@@ -10,6 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,18 +55,20 @@ public class Create implements Callable<Integer> {
 
     Path workspace = Paths.get(outputDir);
 
-    createPOM(workspace, config);
     createLayerFolders(workspace, config);
     createSourceFolders(workspace, config);
-    createLayerAssemblies(workspace, config);
-    
+
+    generateLayerAssemblies(workspace, config);
+    generateSource(workspace, config);
+    generateConfigLayer(workspace, config);
+
+    createPOM(workspace, config);
     return 0;
   }
 
   void createPOM(Path pPath, Project pProject) throws URISyntaxException, IOException, TemplateException {
     Files.createDirectories(pPath);
-    FileWriter out = new FileWriter(pPath.resolve("pom.xml").toFile());
-    Utils.getTemplate("pom.tpl").process(pProject, out);
+    Utils.process("pom.xml", pProject, pPath.resolve("pom.xml"));
   }
 
   void createLayerFolders(Path pPath, Project pProject) throws IOException {
@@ -99,7 +103,7 @@ public class Create implements Callable<Integer> {
     }
   }
 
-  void createLayerAssemblies(Path pPath, Project pProject) throws IOException, TemplateException {
+  void generateLayerAssemblies(Path pPath, Project pProject) throws IOException, TemplateException {
 
     Map<Path, Map<String, String>> assemblies = new HashMap<>();
     assemblies.put(pPath.resolve("src/assembly/common-config.xml"), Map.of("env", "common", "path", "common"));
@@ -110,10 +114,33 @@ public class Create implements Callable<Integer> {
     }
 
     for (Map.Entry<Path, Map<String, String>> entry : assemblies.entrySet()) {
-      Path f = entry.getKey();
-      FileWriter out = new FileWriter(f.toFile());
-      Utils.getTemplate("config-assembly.tpl").process(entry.getValue(), out);
+      Utils.process("config-assembly.xml", entry.getValue(), entry.getKey());
     }
 
+    Utils.process("deployment.xml",
+            Map.of("envs", Arrays.asList(pProject.getEnvironments())),
+            pPath.resolve("src/assembly/deployment.xml"));
+  }
+
+  void generateSource(Path pPath, Project pProject) throws IOException, TemplateException {
+    Path java = pPath.resolve("src/main/java").resolve(pProject.getGroupId().replace(".", "/")).resolve("api");
+    Path test = pPath.resolve("src/test/java").resolve(pProject.getGroupId().replace(".", "/"));
+    Files.createDirectories(java);
+    Files.createDirectories(test);
+
+    Path path = java.resolve("SessionGetService.java");
+    Utils.process("SessionGetService.java", Collections.EMPTY_MAP, path);
+  }
+
+  void generateConfigLayer(Path pPath, Project pProject) throws IOException, TemplateException {
+    Path base = pPath.resolve("config-layers/common");
+    Path service = base.resolve(pProject.getGroupId().replace(".", "/")).resolve("api");
+    Path erail = base.resolve("in/erail/route");
+    Files.createDirectories(service);
+    Files.createDirectories(erail);
+
+    Utils.process("OpenAPI3RouteBuilder.properties", Collections.EMPTY_MAP, erail.resolve("OpenAPI3RouteBuilder.properties"));
+    Utils.process("openapi3.json", Collections.EMPTY_MAP, erail.resolve("openapi3.json"));
+    Utils.process("SessionGetService.properties", Collections.EMPTY_MAP, service.resolve("SessionGetService.properties"));
   }
 }
