@@ -1,5 +1,5 @@
-#/in/erail/tutorial/SessionGetService
-$class=in.erail.tutorial.SessionGetService
+#[=path]
+$class=[=package].SessionGetService
 
 operationId=API_SESSION_GET
 serviceUniqueId=API_SESSION_GET

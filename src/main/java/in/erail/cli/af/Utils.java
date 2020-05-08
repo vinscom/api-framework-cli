@@ -7,6 +7,7 @@ import freemarker.template.MalformedTemplateNameException;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import java.io.CharArrayWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,6 +41,12 @@ public class Utils {
     try (FileWriter out = new FileWriter(pPath.toFile())) {
       getTemplate(pTemplate).process(pData, out);
     }
+  }
+
+  public static String processStr(String pTemplate, Object pData) throws IOException, TemplateException {
+    CharArrayWriter out = new CharArrayWriter();
+    getTemplate(pTemplate).process(pData, out);
+    return out.toString();
   }
 
   public static String getResource(String pPath) throws URISyntaxException, IOException {

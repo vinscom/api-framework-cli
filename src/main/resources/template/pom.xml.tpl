@@ -1,37 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>[=groupId]</groupId>
     <artifactId>[=artifactId]</artifactId>
     <version>[=version]</version>
     <packaging>jar</packaging>
     <properties>
-        <argLine></argLine>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <version.dependency.api-framework>[=versionAPIFramework]</version.dependency.api-framework>
-        <version.dependency.vertx>[=versionVertx]</version.dependency.vertx>
-        <version.dependency.log4j>[=versionLog4j]</version.dependency.log4j>
-        <version.dependency.junit>[=versionJunit]</version.dependency.junit>
-        <version.plugin.maven-assembly-plugin>[=versionPluginMavenAssemblyPlugin]</version.plugin.maven-assembly-plugin>
-        <version.plugin.maven-surefire-plugin>[=versionPluginMavenSurefirePlugin]</version.plugin.maven-surefire-plugin>
-        <version.plugin.maven-jar-plugin>[=versionPluginMavenJarPlugin]</version.plugin.maven-jar-plugin>
-        <version.plugin.jacoco-maven-plugin>[=versionPluginJacocoMavenPlugin]</version.plugin.jacoco-maven-plugin>
-        <version.plugin.maven-compiler-plugin>[=versionPluginMavenCompilerPlugin]</version.plugin.maven-compiler-plugin>
-        <version.plugin.exec-maven-plugin>[=versionPluginExecMavenPlugin]</version.plugin.exec-maven-plugin>
-        <layer.api.framework>${settings.localRepository}/in/erail/api-framework/${version.dependency.api-framework}/api-framework-${version.dependency.api-framework}-common-config.zip</layer.api.framework>
-        <layer.project>${project.basedir}/config-layers/common</layer.project>
-        <layer.project.local>${project.basedir}/config-layers/local</layer.project.local>
-        <layer.project.test>${project.basedir}/config-layers/test</layer.project.test>
-        <#if enableLambda>
-        <layer.api.framework.amazon.lambda>${settings.localRepository}/in/erail/api-framework-amazon-lambda/${version.dependency.api-framework}/api-framework-amazon-lambda-${version.dependency.api-framework}-common-config.zip</layer.api.framework.amazon.lambda>
-        <glue.config.test.layer>./lib/api-framework-2*-common-config.zip,./lib/api-framework-amazon-lambda-2*-common-config.zip,./lib/${project.build.finalName}-common-config.zip,./lib/${project.build.finalName}-env-test-config.zip,/opt/config</glue.config.test.layer>
-        <glue.config.prod.layer>./lib/api-framework-2*-common-config.zip,./lib/api-framework-amazon-lambda-2*-common-config.zip,./lib/${project.build.finalName}-common-config.zip,./lib/${project.build.finalName}-env-prod-config.zip,/opt/config</glue.config.prod.layer>
-        <glue.config.lambda.service>/in/erail/amazon/lambda/service/ProxyService</glue.config.lambda.service>
-        <#else>
-        <glue.config.test.layer>./lib/api-framework-2*-common-config.zip,./lib/${project.build.finalName}-common-config.zip,./lib/${project.build.finalName}-env-test-config.zip,/opt/config</glue.config.test.layer>
-        <glue.config.prod.layer>./lib/api-framework-2*-common-config.zip,./lib/${project.build.finalName}-common-config.zip,./lib/${project.build.finalName}-env-prod-config.zip,/opt/config</glue.config.prod.layer>
-        </#if>
+        <argLine></argLine>
+        <version.api.framework>[=dependencies[0].version]</version.api.framework>
+        <layer.api.framework>${settings.localRepository}/in/erail/api-framework/${version.api.framework}/api-framework-${version.api.framework}-common-config.zip</layer.api.framework>
+        <layer.[=artifactId]>${project.basedir}/config-layers/common</layer.[=artifactId]>
+        <layer.[=artifactId].local>${project.basedir}/config-layers/local</layer.[=artifactId].local>
+        <layer.[=artifactId].test>${project.basedir}/config-layers/test</layer.[=artifactId].test>
+        <#list environments as environment>
+        <glue.config.lambda.[=environment].layer>./lib/api-framework-2*-common-config.zip,./lib/${project.build.finalName}-common-config.zip,./lib/${project.build.finalName}-env-[=environment]-config.zip</glue.config.lambda.[=environment].layer>
+        </#list>
     </properties>
     <repositories>
         <repository>
@@ -39,7 +23,7 @@
             <name>oss.sonatype.org</name>
             <url>https://oss.sonatype.org/content/groups/public</url>
             <releases>
-                <enabled>true</enabled>
+                <enabled>false</enabled>
             </releases>
             <snapshots>
                 <enabled>true</enabled>
@@ -47,58 +31,25 @@
         </repository>
     </repositories>
     <dependencies>
+        <#list dependencies as dependency>
         <dependency>
-            <groupId>in.erail</groupId>
-            <artifactId>api-framework</artifactId>
-            <version>${version.dependency.api-framework}</version>
+            <groupId>[=dependency.groupid]</groupId>
+            <artifactId>[=dependency.artifactid]</artifactId>
+            <version>[=dependency.version]</version>
+            <#if dependency.type??>
+            <type>[=dependency.type]</type>
+            <#else>
+            </#if>
+            <#if dependency.scope??>
+            <scope>[=dependency.scope]</scope>
+            <#else>
+            </#if>
+            <#if dependency.classifier??>
+            <classifier>[=dependency.classifier]</classifier>
+            <#else>
+            </#if>
         </dependency>
-        <dependency>
-            <groupId>in.erail</groupId>
-            <artifactId>api-framework</artifactId>
-            <version>${version.dependency.api-framework}</version>
-            <classifier>common-config</classifier>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>in.erail</groupId>
-            <artifactId>api-framework-amazon-lambda</artifactId>
-            <version>${version.dependency.api-framework}</version>
-            <classifier>common-config</classifier>
-            <type>zip</type>
-        </dependency>
-        <dependency>
-            <groupId>in.erail</groupId>
-            <artifactId>api-framework-amazon-lambda</artifactId>
-            <version>${version.dependency.api-framework}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${version.dependency.log4j}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${version.dependency.log4j}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>${version.dependency.junit}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${version.dependency.junit}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-junit5</artifactId>
-            <version>${version.dependency.vertx}</version>
-            <scope>test</scope>
-        </dependency>
+        </#list>
     </dependencies>
     <build>
         <resources>
@@ -110,7 +61,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>${version.plugin.maven-assembly-plugin}</version>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <id>common-config</id>
@@ -124,40 +75,30 @@
                             </descriptors>
                         </configuration>
                     </execution>
+                    <#list environments as environment>
                     <execution>
-                        <id>env-test-config</id>
+                        <id>env-[=environment]-config</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
                         <configuration>
                             <descriptors>
-                                <descriptor>src/assembly/env-test-config.xml</descriptor>
+                                <descriptor>src/assembly/env-[=environment]-config.xml</descriptor>
                             </descriptors>
                         </configuration>
                     </execution>
+                    </#list>
                     <execution>
-                        <id>env-prod-config</id>
+                        <id>lambda-deployment</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
                         <configuration>
+                            <finalName>cliplatformproject</finalName>
                             <descriptors>
-                                <descriptor>src/assembly/env-prod-config.xml</descriptor>
-                            </descriptors>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>project-deployment</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <finalName>[=artifactId]</finalName>
-                            <descriptors>
-                                <descriptor>src/assembly/project-deployment.xml</descriptor>
+                                <descriptor>src/assembly/deployment.xml</descriptor>
                             </descriptors>
                             <attach>false</attach>
                         </configuration>
@@ -167,22 +108,18 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>${version.plugin.maven-surefire-plugin}</version>
+                <version>2.22.2</version>
                 <configuration>
                     <environmentVariables>
                         <LOG4J_DEFAULT_LEVEL>DEBUG</LOG4J_DEFAULT_LEVEL>
                     </environmentVariables>
-                    <#if enableLambda>
-                    <argLine>@{argLine} -Duser.timezone=UTC -Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.Log4j2LogDelegateFactory -Dglue.layers=${layer.api.framework},${layer.api.framework.amazon.lambda},${layer.project},${layer.project.local},${layer.project.test}</argLine>
-                    <#else>
-                    <argLine>@{argLine} -Duser.timezone=UTC -Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.Log4j2LogDelegateFactory -Dglue.layers=${layer.api.framework},${layer.project},${layer.project.local},${layer.project.test}</argLine>
-                    </#if>
+                    <argLine>@{argLine} -Duser.timezone=UTC -Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.Log4j2LogDelegateFactory -Dglue.layers=${layer.api.framework},${layer.[=artifactId]},${layer.[=artifactId].local},${layer.[=artifactId].test}</argLine>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>${version.plugin.maven-jar-plugin}</version>
+                <version>3.2.0</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -196,7 +133,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${version.plugin.jacoco-maven-plugin}</version>
+                <version>0.8.5</version>
                 <executions>
                     <execution>
                         <id>pre-unit-test</id>
@@ -216,7 +153,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${version.plugin.maven-compiler-plugin}</version>
+                <version>3.8.1</version>
                 <configuration>
                     <release>11</release>
                     <showDeprecation>true</showDeprecation>
@@ -235,18 +172,14 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
-                        <version>${version.plugin.exec-maven-plugin}</version>
+                        <version>1.6.0</version>
                         <configuration>
                             <executable>java</executable>
                             <arguments>
                                 <argument>-Xdebug</argument>
                                 <!--<argument>-agentlib:native-image-agent=config-output-dir=./native</argument>-->
                                 <argument>-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n</argument>
-                                <#if enableLambda>
-                                <argument>-Dglue.layers=${layer.api.framework},${layer.api.framework.amazon.lambda},${layer.project},${layer.project.local}</argument>
-                                <#else>
-                                <argument>-Dglue.layers=${layer.api.framework},${layer.project},${layer.project.local}</argument>
-                                </#if>
+                                <argument>-Dglue.layers=${layer.api.framework},${layer.[=artifactId]},${layer.[=artifactId].local}</argument>
                                 <argument>-Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.Log4j2LogDelegateFactory</argument>
                                 <argument>-Dlog4j.configurationFile=${basedir}/src/main/resources/log4j2.xml</argument>
                                 <argument>-classpath</argument>

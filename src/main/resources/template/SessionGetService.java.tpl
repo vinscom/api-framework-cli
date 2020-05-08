@@ -1,4 +1,4 @@
-package in.erail.tutorial;
+package [=package];
 
 import com.google.common.net.MediaType;
 import in.erail.model.Event;

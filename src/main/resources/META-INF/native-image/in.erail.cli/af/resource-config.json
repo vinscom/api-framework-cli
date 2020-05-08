@@ -6,6 +6,7 @@
     {"pattern":"\\Qtemplate/OpenAPI3RouteBuilder.properties.tpl\\E"}, 
     {"pattern":"\\Qtemplate/SessionGetService.java.tpl\\E"}, 
     {"pattern":"\\Qtemplate/SessionGetService.properties.tpl\\E"}, 
+    {"pattern":"\\Qtemplate/SessionGetServiceTest.java.tpl\\E"}, 
     {"pattern":"\\Qtemplate/config-assembly.xml.tpl\\E"}, 
     {"pattern":"\\Qtemplate/deployment.xml.tpl\\E"}, 
     {"pattern":"\\Qtemplate/openapi3.json.tpl\\E"}, 

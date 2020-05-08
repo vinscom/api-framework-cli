@@ -3,7 +3,6 @@ package in.erail.cli.af;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import freemarker.template.TemplateException;
 import in.erail.cli.af.model.Project;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -50,7 +49,6 @@ public class Create implements Callable<Integer> {
             .setGroupId(groupId)
             .setArtifactId(artifactId)
             .setVersion(version)
-            .setEnableLambda(enableLambda)
             .setEnvironments(env);
 
     Path workspace = Paths.get(outputDir);
@@ -61,7 +59,6 @@ public class Create implements Callable<Integer> {
     generateLayerAssemblies(workspace, config);
     generateSource(workspace, config);
     generateConfigLayer(workspace, config);
-
     createPOM(workspace, config);
     return 0;
   }
@@ -124,23 +121,38 @@ public class Create implements Callable<Integer> {
 
   void generateSource(Path pPath, Project pProject) throws IOException, TemplateException {
     Path java = pPath.resolve("src/main/java").resolve(pProject.getGroupId().replace(".", "/")).resolve("api");
-    Path test = pPath.resolve("src/test/java").resolve(pProject.getGroupId().replace(".", "/"));
+    Path test = pPath.resolve("src/test/java").resolve(pProject.getGroupId().replace(".", "/")).resolve("api");
     Files.createDirectories(java);
     Files.createDirectories(test);
 
-    Path path = java.resolve("SessionGetService.java");
-    Utils.process("SessionGetService.java", Collections.EMPTY_MAP, path);
+    Path javaSrc = java.resolve("SessionGetService.java");
+    Utils.process("SessionGetService.java", Map.of("package", pProject.getGroupId() + ".api"), javaSrc);
+
+    Path testSrc = test.resolve("SessionGetServiceTest.java");
+    Utils.process("SessionGetServiceTest.java", Map.of("package", pProject.getGroupId() + ".api"), testSrc);
   }
 
   void generateConfigLayer(Path pPath, Project pProject) throws IOException, TemplateException {
+    String folder = pProject.getGroupId().replace(".", "/");
     Path base = pPath.resolve("config-layers/common");
-    Path service = base.resolve(pProject.getGroupId().replace(".", "/")).resolve("api");
+    Path service = base.resolve(folder).resolve("api");
     Path erail = base.resolve("in/erail/route");
+
     Files.createDirectories(service);
     Files.createDirectories(erail);
 
-    Utils.process("OpenAPI3RouteBuilder.properties", Collections.EMPTY_MAP, erail.resolve("OpenAPI3RouteBuilder.properties"));
-    Utils.process("openapi3.json", Collections.EMPTY_MAP, erail.resolve("openapi3.json"));
-    Utils.process("SessionGetService.properties", Collections.EMPTY_MAP, service.resolve("SessionGetService.properties"));
+    String serviceCompPath = "/" + folder + "/api/SessionGetService";
+
+    Utils.process("OpenAPI3RouteBuilder.properties",
+            Map.of("path", serviceCompPath),
+            erail.resolve("OpenAPI3RouteBuilder.properties"));
+
+    Utils.process("openapi3.json",
+            Collections.EMPTY_MAP,
+            erail.resolve("openapi3.json"));
+
+    Utils.process("SessionGetService.properties",
+            Map.of("path", serviceCompPath, "package", pProject.getGroupId() + ".api"),
+            service.resolve("SessionGetService.properties"));
   }
 }
