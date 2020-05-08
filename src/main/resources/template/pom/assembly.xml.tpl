@@ -1,0 +1,12 @@
+                    <execution>
+                        <id>[=env]-config</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/assembly/[=env]-config.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>

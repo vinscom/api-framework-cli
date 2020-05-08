@@ -5,10 +5,14 @@ import freemarker.core.ParseException;
 import freemarker.template.Configuration;
 import freemarker.template.MalformedTemplateNameException;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import java.io.CharArrayWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 
 /**
  *
@@ -29,8 +33,20 @@ public class Utils {
     fmConfig.setInterpolationSyntax(Configuration.SQUARE_BRACKET_INTERPOLATION_SYNTAX);
   }
 
-  public static Template getTemplate(String pName) throws MalformedTemplateNameException, ParseException, IOException {
-    return fmConfig.getTemplate(pName);
+  private static Template getTemplate(String pName) throws MalformedTemplateNameException, ParseException, IOException {
+    return fmConfig.getTemplate(pName + ".tpl");
+  }
+
+  public static void process(String pTemplate, Object pData, Path pPath) throws IOException, TemplateException {
+    try (FileWriter out = new FileWriter(pPath.toFile())) {
+      getTemplate(pTemplate).process(pData, out);
+    }
+  }
+
+  public static String processStr(String pTemplate, Object pData) throws IOException, TemplateException {
+    CharArrayWriter out = new CharArrayWriter();
+    getTemplate(pTemplate).process(pData, out);
+    return out.toString();
   }
 
   public static String getResource(String pPath) throws URISyntaxException, IOException {
