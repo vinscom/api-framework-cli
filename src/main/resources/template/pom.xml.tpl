@@ -8,7 +8,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <argLine></argLine>
-        <version.api.framework>[=dependencies[0].version]</version.api.framework>
+        <version.api.framework>2.5.4-SNAPSHOT</version.api.framework>
         <layer.api.framework>${settings.localRepository}/in/erail/api-framework/${version.api.framework}/api-framework-${version.api.framework}-common-config.zip</layer.api.framework>
         <layer.[=artifactId]>${project.basedir}/config-layers/common</layer.[=artifactId]>
         <layer.[=artifactId].local>${project.basedir}/config-layers/local</layer.[=artifactId].local>
