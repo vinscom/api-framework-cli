@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import freemarker.template.TemplateException;
 import in.erail.cli.af.model.Project;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -66,9 +65,10 @@ public class Create implements Callable<Integer> {
       generateGlueConfig(workspace, config);
       generateLog4j(workspace, config);
       createPOM(workspace, config);
+      generateDocker(workspace, config);
     } catch (TemplateException | IOException ex) {
-      Logger.getLogger(Create.class.getName()).log(Level.SEVERE,ex.toString());
-      Logger.getLogger(Create.class.getName()).log(Level.SEVERE,"Please use empty directory");
+      Logger.getLogger(Create.class.getName()).log(Level.SEVERE, ex.toString());
+      Logger.getLogger(Create.class.getName()).log(Level.SEVERE, "Please use empty directory");
     }
     return 0;
   }
@@ -148,10 +148,13 @@ public class Create implements Callable<Integer> {
     Path service = base.resolve(folder).resolve("api");
     Path openapi = base.resolve("in/erail/route");
     Path eventbus = base.resolve("io/vertx/core/eventbus");
+    Path httpserver = base.resolve("in/erail/server");
+    
 
     Files.createDirectories(service);
     Files.createDirectories(openapi);
     Files.createDirectories(eventbus);
+    Files.createDirectories(httpserver);
 
     String serviceCompPath = "/" + folder + "/api/SessionGetService";
 
@@ -169,6 +172,7 @@ public class Create implements Callable<Integer> {
 
     Utils.process("DeliveryOptions.properties", Collections.EMPTY_MAP, eventbus.resolve("DeliveryOptions.properties"));
     Utils.process("EventBusOptions.properties", Collections.EMPTY_MAP, eventbus.resolve("EventBusOptions.properties"));
+    Utils.process("HttpServerOptions.properties", Collections.EMPTY_MAP, httpserver.resolve("HttpServerOptions.properties"));
   }
 
   void generateGlueConfig(Path pPath, Project pProject) throws IOException, TemplateException {
@@ -179,5 +183,10 @@ public class Create implements Callable<Integer> {
 
   void generateLog4j(Path pPath, Project pProject) throws IOException, TemplateException {
     Utils.process("log4j2.xml", Collections.EMPTY_MAP, pPath.resolve("src/main/resources/log4j2.xml"));
+  }
+
+  void generateDocker(Path pPath, Project pProject) throws IOException, TemplateException {
+    Utils.process("Dockerfile", pProject, pPath.resolve("Dockerfile"));
+    Utils.process("docker-compose.yml", pProject, pPath.resolve("docker-compose.yml"));
   }
 }
