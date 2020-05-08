@@ -15,13 +15,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static picocli.CommandLine.*;
 
 /**
  *
  * @author vinay
  */
-@Command(name = "create")
+@Command(name = "create", description = "Create API Framework Project")
 public class Create implements Callable<Integer> {
 
   @Option(names = {"-g", "--groupid"}, defaultValue = "com.foo", description = "Maven project group id")
@@ -54,19 +56,24 @@ public class Create implements Callable<Integer> {
 
     Path workspace = Paths.get(outputDir);
 
-    createLayerFolders(workspace, config);
-    createSourceFolders(workspace, config);
+    try {
+      createLayerFolders(workspace, config);
+      createSourceFolders(workspace, config);
 
-    generateLayerAssemblies(workspace, config);
-    generateSource(workspace, config);
-    generateConfigLayer(workspace, config);
-    generateGlueConfig(workspace, config);
-    generateLog4j(workspace, config);
-    createPOM(workspace, config);
+      generateLayerAssemblies(workspace, config);
+      generateSource(workspace, config);
+      generateConfigLayer(workspace, config);
+      generateGlueConfig(workspace, config);
+      generateLog4j(workspace, config);
+      createPOM(workspace, config);
+    } catch (TemplateException | IOException ex) {
+      Logger.getLogger(Create.class.getName()).log(Level.SEVERE,ex.toString());
+      Logger.getLogger(Create.class.getName()).log(Level.SEVERE,"Please use empty directory");
+    }
     return 0;
   }
 
-  void createPOM(Path pPath, Project pProject) throws URISyntaxException, IOException, TemplateException {
+  void createPOM(Path pPath, Project pProject) throws IOException, TemplateException {
     Files.createDirectories(pPath);
     Utils.process("pom.xml", pProject, pPath.resolve("pom.xml"));
   }

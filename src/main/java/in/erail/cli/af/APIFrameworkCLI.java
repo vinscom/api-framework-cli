@@ -21,6 +21,7 @@ public class APIFrameworkCLI implements Callable<Integer> {
 
   @Override
   public Integer call() throws Exception {
+    CommandLine.usage(this, System.out);
     return 0;
   }
 }
