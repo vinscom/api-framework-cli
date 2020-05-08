@@ -10,7 +10,6 @@ public class Project {
   private String groupId;
   private String artifactId;
   private String version;
-  private Dependency[] dependencies;
   private boolean enableAWSLambda;
 
   public String[] getEnvironments() {
@@ -37,15 +36,6 @@ public class Project {
 
   public Project setArtifactId(String pArtifactId) {
     this.artifactId = pArtifactId;
-    return this;
-  }
-
-  public Dependency[] getDependencies() {
-    return dependencies;
-  }
-
-  public Project setDependencies(Dependency[] pDependencies) {
-    this.dependencies = pDependencies;
     return this;
   }
 

@@ -10,11 +10,17 @@
         <argLine></argLine>
         <version.api.framework>2.5.4-SNAPSHOT</version.api.framework>
         <layer.api.framework>${settings.localRepository}/in/erail/api-framework/${version.api.framework}/api-framework-${version.api.framework}-common-config.zip</layer.api.framework>
+        <#if enableAWSLambda>
+        <layer.api.framework.amazon.lambda>${settings.localRepository}/in/erail/api-framework-amazon-lambda/${version.api.framework}/api-framework-amazon-lambda-${version.api.framework}-common-config.zip</layer.api.framework.amazon.lambda>
+        </#if>
         <layer.[=artifactId]>${project.basedir}/config-layers/common</layer.[=artifactId]>
         <layer.[=artifactId].local>${project.basedir}/config-layers/local</layer.[=artifactId].local>
         <layer.[=artifactId].test>${project.basedir}/config-layers/test</layer.[=artifactId].test>
+        <#if enableAWSLambda>
+        <glue.config.lambda.service>/in/erail/amazon/lambda/service/ProxyService</glue.config.lambda.service>
+        </#if>
         <#list environments as environment>
-        <glue.config.[=environment].layer>./lib/api-framework-2*-common-config.zip,./lib/${project.build.finalName}-common-config.zip,./lib/${project.build.finalName}-env-[=environment]-config.zip</glue.config.[=environment].layer>
+        <glue.config.[=environment].layer>./lib/api-framework-2*-common-config.zip,[=enableAWSLambda?then('./lib/api-framework-amazon-lambda-2*-common-config.zip,','')]./lib/${project.build.finalName}-common-config.zip,./lib/${project.build.finalName}-env-[=environment]-config.zip</glue.config.[=environment].layer>
         </#list>
     </properties>
     <repositories>
@@ -31,25 +37,60 @@
         </repository>
     </repositories>
     <dependencies>
-        <#list dependencies as dependency>
         <dependency>
-            <groupId>[=dependency.groupid]</groupId>
-            <artifactId>[=dependency.artifactid]</artifactId>
-            <version>[=dependency.version]</version>
-            <#if dependency.type??>
-            <type>[=dependency.type]</type>
-            <#else>
-            </#if>
-            <#if dependency.scope??>
-            <scope>[=dependency.scope]</scope>
-            <#else>
-            </#if>
-            <#if dependency.classifier??>
-            <classifier>[=dependency.classifier]</classifier>
-            <#else>
-            </#if>
+            <groupId>in.erail</groupId>
+            <artifactId>api-framework</artifactId>
+            <version>${version.api.framework}</version>
         </dependency>
-        </#list>
+        <dependency>
+            <groupId>in.erail</groupId>
+            <artifactId>api-framework</artifactId>
+            <version>${version.api.framework}</version>
+            <type>zip</type>
+            <classifier>common-config</classifier>
+        </dependency>
+        <#if enableAWSLambda>
+        <dependency>
+            <groupId>in.erail</groupId>
+            <artifactId>api-framework-amazon-lambda</artifactId>
+            <version>${version.api.framework}</version>
+            <classifier>common-config</classifier>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>in.erail</groupId>
+            <artifactId>api-framework-amazon-lambda</artifactId>
+            <version>${version.api.framework}</version>
+        </dependency>
+        </#if>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.12.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.12.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.5.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.5.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-junit5</artifactId>
+            <version>3.8.3</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <resources>
@@ -113,7 +154,7 @@
                     <environmentVariables>
                         <LOG4J_DEFAULT_LEVEL>DEBUG</LOG4J_DEFAULT_LEVEL>
                     </environmentVariables>
-                    <argLine>@{argLine} -Duser.timezone=UTC -Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.Log4j2LogDelegateFactory -Dglue.layers=${layer.api.framework},${layer.[=artifactId]},${layer.[=artifactId].local},${layer.[=artifactId].test}</argLine>
+                    <argLine>@{argLine} -Duser.timezone=UTC -Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.Log4j2LogDelegateFactory -Dglue.layers=${layer.api.framework},[=enableAWSLambda?then('${layer.api.framework.amazon.lambda},','')]${layer.[=artifactId]},${layer.[=artifactId].local},${layer.[=artifactId].test}</argLine>
                 </configuration>
             </plugin>
             <plugin>
@@ -176,10 +217,11 @@
                         <configuration>
                             <executable>java</executable>
                             <arguments>
+                                <!--
                                 <argument>-Xdebug</argument>
-                                <!--<argument>-agentlib:native-image-agent=config-output-dir=./native</argument>-->
                                 <argument>-Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n</argument>
-                                <argument>-Dglue.layers=${layer.api.framework},${layer.[=artifactId]},${layer.[=artifactId].local}</argument>
+                                -->
+                                <argument>-Dglue.layers=${layer.api.framework},[=enableAWSLambda?then('${layer.api.framework.amazon.lambda},','')]${layer.[=artifactId]},${layer.[=artifactId].local}</argument>
                                 <argument>-Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.Log4j2LogDelegateFactory</argument>
                                 <argument>-Dlog4j.configurationFile=${basedir}/src/main/resources/log4j2.xml</argument>
                                 <argument>-classpath</argument>

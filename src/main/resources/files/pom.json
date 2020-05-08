@@ -2,47 +2,5 @@
     "environments": ["test", "prod"],
     "groupId": "",
     "artifactId": "",
-    "version": "1.0-SNAPSHOT",
-    "dependencies": [
-        {
-            "groupid": "in.erail",
-            "artifactid": "api-framework",
-            "version": "${version.api.framework}"
-        },
-        {
-            "groupid": "in.erail",
-            "artifactid": "api-framework",
-            "version": "${version.api.framework}",
-            "classifier": "common-config",
-            "type": "zip"
-        },
-        {
-            "groupid": "org.apache.logging.log4j",
-            "artifactid": "log4j-api",
-            "version": "2.12.1"
-        },
-        {
-            "groupid": "org.apache.logging.log4j",
-            "artifactid": "log4j-core",
-            "version": "2.12.1"
-        },
-        {
-            "groupid": "org.junit.jupiter",
-            "artifactid": "junit-jupiter-api",
-            "version": "5.5.2",
-            "scope": "test"
-        },
-        {
-            "groupid": "org.junit.jupiter",
-            "artifactid": "junit-jupiter-engine",
-            "version": "5.5.2",
-            "scope": "test"
-        },
-        {
-            "groupid": "io.vertx",
-            "artifactid": "vertx-junit5",
-            "version": "3.8.3",
-            "scope": "test"
-        }
-    ]
+    "version": "1.0-SNAPSHOT"
 }

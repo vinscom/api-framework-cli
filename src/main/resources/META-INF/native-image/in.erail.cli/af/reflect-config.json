@@ -25,17 +25,6 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
-  "name":"in.erail.cli.af.model.Dependency",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
-  "allPublicMethods":true,
-  "allDeclaredConstructors":true,
-  "allPublicConstructors":true
-},
-{
-  "name":"in.erail.cli.af.model.Dependency[]"
-},
-{
   "name":"in.erail.cli.af.model.Project",
   "allDeclaredFields":true,
   "allDeclaredMethods":true,
