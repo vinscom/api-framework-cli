@@ -30,7 +30,7 @@ public class Create implements Callable<Integer> {
   private String artifactId;
   @Option(names = {"-v", "--version"}, defaultValue = "0.1", description = "Maven Project Version")
   private String version;
-  @Option(names = {"-le", "--enableLambda"}, defaultValue = "false", description = "Enable Lambda Support")
+  @Option(names = {"-awsl", "--enableAWSLambda"}, defaultValue = "false", description = "Enable Lambda Support")
   private boolean enableLambda;
   @Option(names = {"-o", "--output"}, defaultValue = ".", description = "Output Directory")
   private String outputDir;
@@ -49,7 +49,8 @@ public class Create implements Callable<Integer> {
             .setGroupId(groupId)
             .setArtifactId(artifactId)
             .setVersion(version)
-            .setEnvironments(env);
+            .setEnvironments(env)
+            .setEnableAWSLambda(enableLambda);
 
     Path workspace = Paths.get(outputDir);
 
@@ -59,6 +60,8 @@ public class Create implements Callable<Integer> {
     generateLayerAssemblies(workspace, config);
     generateSource(workspace, config);
     generateConfigLayer(workspace, config);
+    generateGlueConfig(workspace, config);
+    generateLog4j(workspace, config);
     createPOM(workspace, config);
     return 0;
   }
@@ -154,5 +157,15 @@ public class Create implements Callable<Integer> {
     Utils.process("SessionGetService.properties",
             Map.of("path", serviceCompPath, "package", pProject.getGroupId() + ".api"),
             service.resolve("SessionGetService.properties"));
+  }
+
+  void generateGlueConfig(Path pPath, Project pProject) throws IOException, TemplateException {
+    for (String environment : pProject.getEnvironments()) {
+      Utils.process("glue.config", Map.of("environment", environment), pPath.resolve("src/main/resources/glue-" + environment + ".config"));
+    }
+  }
+
+  void generateLog4j(Path pPath, Project pProject) throws IOException, TemplateException {
+    Utils.process("log4j2.xml", Collections.EMPTY_MAP, pPath.resolve("src/main/resources/log4j2.xml"));
   }
 }

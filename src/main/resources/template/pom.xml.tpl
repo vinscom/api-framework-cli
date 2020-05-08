@@ -14,7 +14,7 @@
         <layer.[=artifactId].local>${project.basedir}/config-layers/local</layer.[=artifactId].local>
         <layer.[=artifactId].test>${project.basedir}/config-layers/test</layer.[=artifactId].test>
         <#list environments as environment>
-        <glue.config.lambda.[=environment].layer>./lib/api-framework-2*-common-config.zip,./lib/${project.build.finalName}-common-config.zip,./lib/${project.build.finalName}-env-[=environment]-config.zip</glue.config.lambda.[=environment].layer>
+        <glue.config.[=environment].layer>./lib/api-framework-2*-common-config.zip,./lib/${project.build.finalName}-common-config.zip,./lib/${project.build.finalName}-env-[=environment]-config.zip</glue.config.[=environment].layer>
         </#list>
     </properties>
     <repositories>
@@ -96,7 +96,7 @@
                             <goal>single</goal>
                         </goals>
                         <configuration>
-                            <finalName>cliplatformproject</finalName>
+                            <finalName>[=artifactId]</finalName>
                             <descriptors>
                                 <descriptor>src/assembly/deployment.xml</descriptor>
                             </descriptors>

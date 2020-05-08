@@ -11,6 +11,7 @@ public class Project {
   private String artifactId;
   private String version;
   private Dependency[] dependencies;
+  private boolean enableAWSLambda;
 
   public String[] getEnvironments() {
     return environments;
@@ -54,6 +55,15 @@ public class Project {
 
   public Project setVersion(String pVersion) {
     this.version = pVersion;
+    return this;
+  }
+
+  public boolean isEnableAWSLambda() {
+    return enableAWSLambda;
+  }
+
+  public Project setEnableAWSLambda(boolean pEnableAWSLambda) {
+    this.enableAWSLambda = pEnableAWSLambda;
     return this;
   }
 

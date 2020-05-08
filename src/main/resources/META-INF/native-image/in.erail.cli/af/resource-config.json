@@ -9,6 +9,8 @@
     {"pattern":"\\Qtemplate/SessionGetServiceTest.java.tpl\\E"}, 
     {"pattern":"\\Qtemplate/config-assembly.xml.tpl\\E"}, 
     {"pattern":"\\Qtemplate/deployment.xml.tpl\\E"}, 
+    {"pattern":"\\Qtemplate/glue.config.tpl\\E"}, 
+    {"pattern":"\\Qtemplate/log4j2.xml.tpl\\E"}, 
     {"pattern":"\\Qtemplate/openapi3.json.tpl\\E"}, 
     {"pattern":"\\Qtemplate/pom.xml.tpl\\E"}
   ],
