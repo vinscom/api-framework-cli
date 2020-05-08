@@ -3,6 +3,8 @@
     {"pattern":"\\Qfiles/pom.json\\E"}, 
     {"pattern":"\\Qfreemarker/ext/beans/DefaultMemberAccessPolicy-rules\\E"}, 
     {"pattern":"\\Qfreemarker/version.properties\\E"}, 
+    {"pattern":"\\Qtemplate/DeliveryOptions.properties.tpl\\E"}, 
+    {"pattern":"\\Qtemplate/EventBusOptions.properties.tpl\\E"}, 
     {"pattern":"\\Qtemplate/OpenAPI3RouteBuilder.properties.tpl\\E"}, 
     {"pattern":"\\Qtemplate/SessionGetService.java.tpl\\E"}, 
     {"pattern":"\\Qtemplate/SessionGetService.properties.tpl\\E"}, 

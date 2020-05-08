@@ -67,7 +67,7 @@
                         <argument>-o</argument>
                         <argument>test</argument>
                         <argument>-e</argument>
-                        <argument>test,prod</argument>
+                        <argument>test,prod,uat</argument>
                     </arguments>
                 </configuration>
             </plugin>

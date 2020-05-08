@@ -139,24 +139,29 @@ public class Create implements Callable<Integer> {
     String folder = pProject.getGroupId().replace(".", "/");
     Path base = pPath.resolve("config-layers/common");
     Path service = base.resolve(folder).resolve("api");
-    Path erail = base.resolve("in/erail/route");
+    Path openapi = base.resolve("in/erail/route");
+    Path eventbus = base.resolve("io/vertx/core/eventbus");
 
     Files.createDirectories(service);
-    Files.createDirectories(erail);
+    Files.createDirectories(openapi);
+    Files.createDirectories(eventbus);
 
     String serviceCompPath = "/" + folder + "/api/SessionGetService";
 
     Utils.process("OpenAPI3RouteBuilder.properties",
             Map.of("path", serviceCompPath),
-            erail.resolve("OpenAPI3RouteBuilder.properties"));
+            openapi.resolve("OpenAPI3RouteBuilder.properties"));
 
     Utils.process("openapi3.json",
             Collections.EMPTY_MAP,
-            erail.resolve("openapi3.json"));
+            openapi.resolve("openapi3.json"));
 
     Utils.process("SessionGetService.properties",
             Map.of("path", serviceCompPath, "package", pProject.getGroupId() + ".api"),
             service.resolve("SessionGetService.properties"));
+
+    Utils.process("DeliveryOptions.properties", Collections.EMPTY_MAP, eventbus.resolve("DeliveryOptions.properties"));
+    Utils.process("EventBusOptions.properties", Collections.EMPTY_MAP, eventbus.resolve("EventBusOptions.properties"));
   }
 
   void generateGlueConfig(Path pPath, Project pProject) throws IOException, TemplateException {
