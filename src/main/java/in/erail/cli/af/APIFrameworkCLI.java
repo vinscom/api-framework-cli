@@ -7,7 +7,7 @@ import java.util.concurrent.Callable;
 @Command(
         name = "af", 
         mixinStandardHelpOptions = true, 
-        version = "API Framework 4.0",
+        version = "1.0",
         subcommands = {
           Create.class
         }
