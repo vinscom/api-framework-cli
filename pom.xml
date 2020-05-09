@@ -64,10 +64,15 @@
                         <classpath/>
                         <argument>in.erail.cli.af.APIFrameworkCLI</argument>
                         <argument>create</argument>
+                        <argument>-g</argument>
+                        <argument>com.foo</argument>
+                        <argument>-a</argument>
+                        <argument>bar</argument>
                         <argument>-o</argument>
                         <argument>test</argument>
                         <argument>-e</argument>
                         <argument>test,prod</argument>
+                        <argument>-h</argument>
                     </arguments>
                 </configuration>
             </plugin>

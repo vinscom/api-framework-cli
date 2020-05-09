@@ -7,7 +7,7 @@ import java.util.concurrent.Callable;
 @Command(
         name = "af", 
         mixinStandardHelpOptions = true, 
-        version = "1.0",
+        version = "1.1",
         subcommands = {
           Create.class
         }
@@ -15,7 +15,9 @@ import java.util.concurrent.Callable;
 public class APIFrameworkCLI implements Callable<Integer> {
 
   public static void main(String... args) {
-    int exitCode = new CommandLine(new APIFrameworkCLI()).execute(args);
+    int exitCode = new CommandLine(new APIFrameworkCLI())
+            .setUsageHelpLongOptionsMaxWidth(30)
+            .execute(args);
     System.exit(exitCode);
   }
 

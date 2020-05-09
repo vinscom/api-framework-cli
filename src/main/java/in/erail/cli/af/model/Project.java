@@ -11,6 +11,7 @@ public class Project {
   private String artifactId;
   private String version;
   private boolean enableAWSLambda;
+  private boolean createHelmChart;
 
   public String[] getEnvironments() {
     return environments;
@@ -54,6 +55,15 @@ public class Project {
 
   public Project setEnableAWSLambda(boolean pEnableAWSLambda) {
     this.enableAWSLambda = pEnableAWSLambda;
+    return this;
+  }
+
+  public boolean isCreateHelmChart() {
+    return createHelmChart;
+  }
+
+  public Project setCreateHelmChart(boolean pCreateHelmChart) {
+    this.createHelmChart = pCreateHelmChart;
     return this;
   }
 

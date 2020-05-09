@@ -1,5 +1,6 @@
 {
   "resources":[
+    {"pattern":"\\Qfiles/chart.zip\\E"}, 
     {"pattern":"\\Qfiles/pom.json\\E"}, 
     {"pattern":"\\Qfreemarker/ext/beans/DefaultMemberAccessPolicy-rules\\E"}, 
     {"pattern":"\\Qfreemarker/version.properties\\E"}, 

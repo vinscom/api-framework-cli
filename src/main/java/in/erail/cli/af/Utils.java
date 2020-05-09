@@ -8,11 +8,16 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import java.io.CharArrayWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  *
@@ -52,6 +57,38 @@ public class Utils {
   public static String getResource(String pPath) throws URISyntaxException, IOException {
     try (InputStream stream = Utils.class.getResourceAsStream(pPath)) {
       return new String(stream.readAllBytes());
+    }
+  }
+
+  public static String unzip(String pZipFileResource, Path pDestinationPath) throws IOException {
+    try (ZipInputStream zipIn = new ZipInputStream(Utils.class.getResourceAsStream(pZipFileResource))) {
+
+      ZipEntry entry = zipIn.getNextEntry();
+      // iterates over entries in the zip file
+      while (entry != null) {
+        String uri = pDestinationPath + File.separator + entry.getName();
+        Path path = Paths.get(uri);
+        if (entry.isDirectory()) {
+          // if the entry is a directory, make the directory
+          if (!Files.exists(path)) {
+            Files.createDirectories(path);
+          }
+        } else {
+
+          Path parentPath = path.getParent();
+
+          if (!Files.exists(parentPath)) {
+            Files.createDirectories(parentPath);
+          }
+
+          // if the entry is a file, extracts it
+          Files.copy(zipIn, path);
+        }
+        zipIn.closeEntry();
+        entry = zipIn.getNextEntry();
+      }
+
+      return pDestinationPath.toString();
     }
   }
 }

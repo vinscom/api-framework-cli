@@ -22,22 +22,27 @@ import static picocli.CommandLine.*;
  *
  * @author vinay
  */
-@Command(name = "create", description = "Create API Framework Project")
+@Command(name = "create",
+        description = "Create API Framework Project",
+        showDefaultValues = true,
+        sortOptions = false
+)
 public class Create implements Callable<Integer> {
 
-  @Option(names = {"-g", "--groupid"}, defaultValue = "com.foo", description = "Maven project group id")
+  @Option(names = {"-g", "--groupid"}, order = 1, required = true, description = "Maven project group id")
   private String groupId;
-  @Option(names = {"-a", "--artifactid"}, defaultValue = "bar", description = "Maven project artifact id")
+  @Option(names = {"-a", "--artifactid"}, order = 2, required = true, description = "Maven project artifact id")
   private String artifactId;
-  @Option(names = {"-v", "--version"}, defaultValue = "0.1", description = "Maven Project Version")
+  @Option(names = {"-v", "--version"}, order = 3, defaultValue = "0.1", description = "Maven Project Version")
   private String version;
-  @Option(names = {"-awsl", "--enableAWSLambda"}, defaultValue = "false", description = "Enable Lambda Support")
-  private boolean enableLambda;
-  @Option(names = {"-o", "--output"}, defaultValue = ".", description = "Output Directory")
+  @Option(names = {"-o", "--output"}, order = 4, defaultValue = "./project", description = "Output Directory")
   private String outputDir;
-
-  @Option(names = {"-e", "--env"}, split = ",", defaultValue = "test,prod", description = "Additional Environments")
+  @Option(names = {"-e", "--env"}, order = 5, split = ",", defaultValue = "test,prod", description = "Additional Environments")
   private String[] env;
+  @Option(names = {"-awsl", "--enableAWSLambda"}, order = 6, description = "Enable Lambda Support")
+  private boolean enableLambda;
+  @Option(names = {"-h", "--helm"}, order = 7, description = "Create Helm Chart")
+  private boolean createHelmChart;
 
   private final ObjectMapper mapper = new ObjectMapper();
 
@@ -51,7 +56,8 @@ public class Create implements Callable<Integer> {
             .setArtifactId(artifactId)
             .setVersion(version)
             .setEnvironments(env)
-            .setEnableAWSLambda(enableLambda);
+            .setEnableAWSLambda(enableLambda)
+            .setCreateHelmChart(createHelmChart);
 
     Path workspace = Paths.get(outputDir);
 
@@ -66,6 +72,7 @@ public class Create implements Callable<Integer> {
       generateLog4j(workspace, config);
       createPOM(workspace, config);
       generateDocker(workspace, config);
+      extractHelmChart(workspace, config);
     } catch (TemplateException | IOException ex) {
       Logger.getLogger(Create.class.getName()).log(Level.SEVERE, ex.toString());
       Logger.getLogger(Create.class.getName()).log(Level.SEVERE, "Please use empty directory");
@@ -149,7 +156,6 @@ public class Create implements Callable<Integer> {
     Path openapi = base.resolve("in/erail/route");
     Path eventbus = base.resolve("io/vertx/core/eventbus");
     Path httpserver = base.resolve("in/erail/server");
-    
 
     Files.createDirectories(service);
     Files.createDirectories(openapi);
@@ -188,5 +194,11 @@ public class Create implements Callable<Integer> {
   void generateDocker(Path pPath, Project pProject) throws IOException, TemplateException {
     Utils.process("Dockerfile", pProject, pPath.resolve("Dockerfile"));
     Utils.process("docker-compose.yml", pProject, pPath.resolve("docker-compose.yml"));
+  }
+
+  void extractHelmChart(Path pPath, Project pProject) throws IOException, TemplateException {
+    if (pProject.isCreateHelmChart()) {
+      Utils.unzip("/files/chart.zip", pPath);
+    }
   }
 }
