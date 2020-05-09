@@ -1,6 +1,0 @@
-{
-    "environments": ["test", "prod"],
-    "groupId": "",
-    "artifactId": "",
-    "version": "1.0-SNAPSHOT"
-}

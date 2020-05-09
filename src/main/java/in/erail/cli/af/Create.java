@@ -1,6 +1,5 @@
 package in.erail.cli.af;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import freemarker.template.TemplateException;
 import in.erail.cli.af.model.Project;
 import java.io.IOException;
@@ -44,13 +43,11 @@ public class Create implements Callable<Integer> {
   @Option(names = {"-h", "--helm"}, order = 7, description = "Create Helm Chart")
   private boolean createHelmChart;
 
-  private final ObjectMapper mapper = new ObjectMapper();
-
   @Override
   public Integer call() throws Exception {
 
     //Create POM
-    Project config = mapper.readValue(Utils.getResource("/files/pom.json"), Project.class);
+    Project config = new Project();
     config
             .setGroupId(groupId)
             .setArtifactId(artifactId)

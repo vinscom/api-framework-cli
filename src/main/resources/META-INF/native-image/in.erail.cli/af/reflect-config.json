@@ -1,13 +1,5 @@
 [
 {
-  "name":"com.fasterxml.jackson.databind.ext.Java7HandlersImpl",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
-  "name":"com.fasterxml.jackson.databind.ext.Java7SupportImpl",
-  "methods":[{"name":"<init>","parameterTypes":[] }]
-},
-{
   "name":"freemarker.core._Java8Impl",
   "fields":[{"name":"INSTANCE"}]
 },
@@ -26,10 +18,7 @@
 },
 {
   "name":"in.erail.cli.af.model.Project",
-  "allDeclaredFields":true,
-  "allDeclaredMethods":true,
   "allPublicMethods":true,
-  "allDeclaredConstructors":true,
   "allPublicConstructors":true
 },
 {
