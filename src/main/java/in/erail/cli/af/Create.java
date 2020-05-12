@@ -47,14 +47,15 @@ public class Create implements Callable<Integer> {
   public Integer call() throws Exception {
 
     //Create POM
-    Project config = new Project();
-    config
-            .setGroupId(groupId)
-            .setArtifactId(artifactId)
-            .setVersion(version)
-            .setEnvironments(env)
-            .setEnableAWSLambda(enableLambda)
-            .setCreateHelmChart(createHelmChart);
+    Project config = Project
+            .builder()
+            .groupId(groupId)
+            .artifactId(artifactId)
+            .version(version)
+            .environments(env)
+            .enableAWSLambda(enableLambda)
+            .createHelmChart(createHelmChart)
+            .build();
 
     Path workspace = Paths.get(outputDir);
 
